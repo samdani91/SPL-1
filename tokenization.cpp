@@ -60,3 +60,73 @@ int inputCodeInLineByLine(string inputFile)
 
     return totalLine;
 }
+void tokenization(int totalLine)
+{
+    ofstream take("TokenFile.txt");
+    string item;
+
+    for (int i = 0; i < totalLine; i++)
+    {
+        int lengthLine = perline[i].text.size();
+
+        for (int j = 0; j < lengthLine;)
+        {
+            if (operatorCheck(perline[i].text[j]) && operatorCheckdouble(perline[i].text[j + 1]))
+            {
+                string toR = keyword_identifier_number_check(i, j, item);
+                take << toR;
+
+                take << "operator\t" << perline[i].text[j] << perline[i].text[j + 1] << "\t";
+                take << perline[i].line << "\t" << j + 1 << "\n";
+                j += 2;
+            }
+            else if (operatorCheck(perline[i].text[j]))
+            {
+                string toR = keyword_identifier_number_check(i, j, item);
+                take << toR;
+
+                take << "operator\t" << perline[i].text[j] << "\t";
+                take << perline[i].line << "\t" << j + 1 << "\n";
+                j += 1;
+            }
+            else if (perline[i].text[j] == '\\')
+            {
+                string toR = keyword_identifier_number_check(i, j, item);
+                take << toR;
+
+                take << "character\t" << perline[i].text[j] << perline[i].text[j + 1] << "\t";
+                take << perline[i].line << "\t" << j + 1 << "\n";
+                j += 2;
+            }
+            else if (perline[i].text[j] == '"')
+            {
+                string toR = keyword_identifier_number_check(i, j, item);
+                take << toR;
+
+                j++;
+                int temp = j;
+                string str;
+
+                while (perline[i].text[j] != '"')
+                {
+                    str += perline[i].text[j];
+                    j++;
+                }
+                j++;
+                take << "string\t" << str << "\t";
+                take << perline[i].line << "\t" << temp + 1 << "\n";
+            }
+            else if (perline[i].text[j] == ' ' || perline[i].text[j] == '\n')
+            {
+                string toR = keyword_identifier_number_check(i, j, item);
+                take << toR;
+                j++;
+            }
+            else
+            {
+                item += perline[i].text[j++];
+            }
+        }
+    }
+    take.close();
+}
