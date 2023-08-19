@@ -130,3 +130,84 @@ void tokenization(int totalLine)
     }
     take.close();
 }
+string readInputCode()
+{
+    FILE *fp;
+    string inputFile, orginal;
+    char ch;
+
+    fp = fopen("sourceCode.c", "r");
+
+    if (fp == NULL)
+    {
+        printf("error while opening the input file\n");
+        exit(0);
+    }
+
+    while ((ch = fgetc(fp)) != EOF)
+    {
+        inputFile = inputFile + ch;
+    }
+
+    orginal = inputFile;
+    cout << "\n\n\t\t\tYour Input C Code:\n\n";
+    cout << orginal << "\n\n";
+
+    for (int i = 0; i + 1 < (int)inputFile.size(); ++i)
+    {
+        int starti = i;
+        if (inputFile[i] == '/' && inputFile[i + 1] == '/')
+        {
+            while (i < (int)inputFile.size() && inputFile[i] != '\n')
+            {
+                i++;
+            }
+
+            i--;
+        }
+
+        if (inputFile[i] == '/' && inputFile[i + 1] == '*')
+        {
+            while (i + 1 < (int)inputFile.size() && (inputFile[i] != '*' || inputFile[i + 1] != '/'))
+            {
+                i++;
+            }
+
+            if (i + 1 == (int)inputFile.size() && (inputFile[i] != '*' || inputFile[i + 1] != '/'))
+            {
+                int lineNumberCount = 1;
+
+                for (int j = 0; j < starti; ++j)
+                {
+                    if (orginal[j] == '\n')
+                    {
+                        lineNumberCount++;
+                    }
+                }
+
+                cout << "\n\n*** Unterminated comment issue on Line Number - " << lineNumberCount << "\n";
+
+                exit(0);
+            }
+
+            i++;
+        }
+
+        if (starti == i)
+        {
+            continue;
+        }
+
+        while (starti <= i)
+        {
+            if (inputFile[starti] != '\n')
+            {
+                inputFile[starti] = ' ';
+            }
+
+            starti++;
+        }
+    }
+
+    return inputFile;
+}
