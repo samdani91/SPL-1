@@ -25,5 +25,10 @@ bool operatorCheckdouble( char ch );
 bool isItInteger( string check );
 bool isItDouble( string check );
 
+string keyword_identifier_number_check( int l, int col, string &check );
+void tokenization( int totalLine );
+string readInputCode( );
+int inputCodeInLineByLine( string codeText );
+string getPrintString( string item, int l, int col );
 
 #endif
