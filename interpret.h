@@ -1,3 +1,6 @@
+#ifndef INTERPRET_H
+#define INTERPRET_H
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -8,3 +11,5 @@ void check_open_bracket(int lineNum, string tokenValue);
 
 
 vector<string> header = {"stdio.h", "conio.h", "stdlib.h", "math.h", "string.h"};
+
+#endif
