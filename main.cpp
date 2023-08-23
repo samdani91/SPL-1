@@ -1,5 +1,6 @@
 #include <iostream>
 #include "TokenHeader.h"
+#include "interpret.h"
 
 
 int main()
@@ -9,8 +10,10 @@ int main()
 
     tokenization(totalLines); // Perform tokenization and write the tokens to "TokenFile.txt"
 
-    // cout<<"\t\t\t---------------Interpretation----------------"<<endl;
-    // cout<<endl;
+    cout<<"\t\t\t---------------Interpretation----------------"<<endl;
+    cout<<endl;
+
+    interpretation();
 
     return 0;
 }
