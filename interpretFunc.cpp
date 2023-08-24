@@ -103,3 +103,119 @@ void check_open_bracket(int lineNum, string tokenValue)
         open = false;
     }
 }
+void read_var(unordered_map<string, string> mp, int lineNum)
+{
+    auto it = mp.find("integer");
+    if (it != mp.end())
+    {
+        cout << "In line " << lineNum + 1 << " >> "
+             << "This a " << mp["keyword"] << " variable " << mp["identifier"] << " and value assigned to it is " << mp["integer"] << endl;
+        traceVar.insert(make_pair(mp["identifier"], stoi(mp["integer"])));
+    }
+    else
+    {
+        it = mp.find("float");
+        if (it != mp.end())
+        {
+            cout << "In line " << lineNum + 1 << " >> "
+                 << "This a " << mp["keyword"] << " variable " << mp["identifier"] << " and value assigned to it is " << mp["float"] << endl;
+            traceVar.insert(make_pair(mp["identifier"], stof(mp["float"])));
+        }
+    }
+}
+void read_condition(unordered_map<string, string> condition, int lineNum)
+{
+    auto it = condition.find("integer");
+    int checkInt = 0;
+    if (it != condition.end())
+    {
+        cout << "In line " << lineNum + 1 << " >> "
+             << "There is a " << condition["keyword"] << " condition that is true when " << condition["identifier"] << " is " << operators[condition["operator"]] << condition["integer"] << endl;
+        checkInt = 1;
+    }
+    else
+    {
+        it = condition.find("float");
+        if (it != condition.end())
+        {unordered_map<string, float> traceVar;
+            cout << "In line " << lineNum + 1 << " >> "
+                 << "There is a " << condition["keyword"] << " condition that is true when " << condition["identifier"] << " is " << operators[condition["operator"]] << condition["float"] << endl;
+        }
+    }
+    float temp = traceVar[condition["identifier"]];
+    float temp2;
+    if (checkInt)
+    {
+        temp2 = stof(condition["integer"]);
+    }
+    else
+    {
+        temp2 = stof(condition["float"]);
+    }
+    if (condition["operator"] == "!=")
+    {
+        if (temp != temp2)
+        {
+            cout << "\t\tand Condition is true" << endl;
+        }
+        else
+        {
+            cout << "\t\tand Condition is false" << endl;
+        }
+    }
+    else if (condition["operator"] == "==")
+    {
+        if (temp == temp2)
+        {
+            cout << "\t\tand Condition is true" << endl;
+        }
+        else
+        {
+            cout << "\t\tand Condition is false" << endl;
+        }
+    }
+    else if (condition["operator"] == ">=")
+    {
+        if (temp >= temp2)
+        {
+            cout << "\t\tand Condition is true" << endl;
+        }
+        else
+        {
+            cout << "\t\tand Condition is false" << endl;
+        }
+    }
+    else if (condition["operator"] == "<=")
+    {
+        if (temp <= temp2)
+        {
+            cout << "\t\tand Condition is true" << endl;
+        }
+        else
+        {
+            cout << "\t\tand Condition is false" << endl;
+        }
+    }
+    else if (condition["operator"] == ">")
+    {
+        if (temp > temp2)
+        {
+            cout << "\t\tand Condition is true" << endl;
+        }
+        else
+        {
+            cout << "\t\tand Condition is false" << endl;
+        }
+    }
+    else if (condition["operator"] == "<")
+    {
+        if (temp < temp2)
+        {
+            cout << "\t\tand Condition is true" << endl;
+        }
+        else
+        {
+            cout << "\t\tand Condition is false" << endl;
+        }
+    }
+}
