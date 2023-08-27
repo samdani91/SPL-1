@@ -219,3 +219,78 @@ void read_condition(unordered_map<string, string> condition, int lineNum)
         }
     }
 }
+void read_if_else_block(unordered_multimap<string, string> statements, int lineNum)
+{
+    string keyTodelete = "identifier";
+    string valueTodelete = "printf";
+    int check_print = 0;
+
+    auto range = statements.equal_range(keyTodelete);
+    for (auto it = range.first; it != range.second; ++it)
+    {
+        if (it->second == valueTodelete)
+        {
+            check_print = 1;
+            statements.erase(it);
+            break;
+        }
+    }
+
+    if (check_print)
+        read_printf(statements, lineNum);
+}
+void read_printf(unordered_multimap<string, string> print, int lineNum)
+{
+    auto range = print.equal_range("string");
+    string format_specifier;
+    string var;
+    string output;
+    int check_format_spec = 0;
+    for (auto it = range.first; it != range.second; ++it)
+    {   
+        if (it->first == "string")
+        {
+            string temp=it->second;
+            if (it->second == "%d" || it->second == "%f")
+            {
+                format_specifier = it->second;
+                check_format_spec = 1;
+                break;
+            }
+            else if(temp.find("%d\n")){
+                format_specifier ="%dn";
+                check_format_spec = 1;
+                break;
+            }
+            else if(temp.find("%f\n")){
+                format_specifier ="%fn";
+                check_format_spec = 1;
+                break;
+            }
+            else
+            {
+                output = it->second;
+                break;
+            }
+        }
+    }
+    range = print.equal_range("identifier");
+    for (auto it = range.first; it != range.second; ++it)
+    {
+        if (it->first == "identifier")
+        {
+            var = it->second;
+            break;
+        }
+    }
+    if (check_format_spec)
+    {
+        cout << "In line " << lineNum + 1 << " >> "
+             << "This a print statement and which prints a " << fm_spec[format_specifier] << var << " = " << traceVar[var] << endl;
+    }
+    else
+    {
+        cout << "In line " << lineNum + 1 << " >> "
+             << "This a print statement and which prints " << output << endl;
+    }
+}
