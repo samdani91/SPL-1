@@ -2,6 +2,18 @@
 #include "interpret.h"
 using namespace std;
 
+vector<string> header = {"stdio.h", "conio.h", "stdlib.h", "math.h", "string.h"};
+map<string, string> operators = {{"!=", "not equal "},
+                                 {"==", "equal "},
+                                 {">=", "greater than or equal "},
+                                 {"<=", "less than or equal "},
+                                 {">", "greater than "},
+                                 {"<", "less than "}};
+map<string, string> fm_spec = {{"%d", "integer "},
+                                {"%dn", "integer in every new line "},
+                               {"%f", "float "},
+                               {"%fn", "float in every new line "}};
+unordered_map<string, float> traceVar;
 
 bool open, isMain = false;
 
@@ -17,7 +29,8 @@ void interpretation()
     }
 
     string line, temp;
-    
+
+
     getline(file, line);
 
     while (!file.eof())
@@ -55,7 +68,183 @@ void interpretation()
         }
         else if (open == true)
         {
-            check_open_bracket(lineNum, tokenValue);
+            check_open_bracket(lineNum, tokenValue,"main");
+        }
+        else if (tokenType == "keyword" && tokenValue != "if" && tokenValue != "else" && tokenValue != "return" && tokenValue != "for" && isMain == true)
+        {
+            // vector<pair<string,string>>v;
+            unordered_map<string, string> mp;
+            while (currlineNum == lineNum)
+            {
+                mp.insert(make_pair(tokenType, tokenValue));
+                line.clear();
+                getline(file, line);
+                istringstream iss(line);
+                iss >> tokenType >> tokenValue >> currlineNum;
+            }
+            read_var(mp, lineNum);
+            mp.clear();
+        }
+        else if (tokenType == "keyword" && tokenValue == "if" && isMain == true)
+        {
+            unordered_map<string, string> condition;
+            unordered_multimap<string, string> statements;
+            bool checkOpenCurlyBrace=false;
+            int openCurlyBraceLinenum;
+            while (currlineNum == lineNum)
+            {   
+                
+                if (tokenValue != "(" && tokenValue != ")" && tokenValue != "{")
+                {
+                    // cout<<"in"<<endl;
+                    condition.insert(make_pair(tokenType, tokenValue));
+                }
+                line.clear();
+                getline(file, line);
+                istringstream iss(line);
+                iss >> tokenType >> tokenValue >> currlineNum;
+                if(tokenValue=="{")
+                {   
+                    checkOpenCurlyBrace=true;
+                    openCurlyBraceLinenum=currlineNum;
+
+                }
+            }
+            read_condition(condition, lineNum);
+            condition.clear();
+            if(checkOpenCurlyBrace){
+                check_open_bracket(openCurlyBraceLinenum,"{","if");
+            }
+            lineNum++;
+            while (tokenValue != "}")
+            {
+                while (currlineNum == lineNum)
+                {
+                    if (tokenValue != "(" && tokenValue != ")" && tokenValue != ";")
+                        statements.insert(make_pair(tokenType, tokenValue));
+                    line.clear();
+                    getline(file, line);
+                    istringstream iss(line);
+                    iss >> tokenType >> tokenValue >> currlineNum;
+                }
+                read_if_else_block(statements, lineNum);
+                statements.clear();
+                lineNum = currlineNum;
+            }
+            cout << "In line " << lineNum + 1 << " >> "
+                 << tokenValue << " closing of if block" << endl;
+        }
+        else if (tokenType == "keyword" && tokenValue == "else" && isMain == true)
+        {
+            unordered_multimap<string, string> statements;
+            cout << "In line " << lineNum + 1 << " >> "
+                 << "Starting of " << tokenValue << " block" << endl;
+            line.clear();
+            getline(file, line);
+            line.clear();
+            getline(file, line);
+            istringstream iss(line);
+            iss >> tokenType >> tokenValue >> currlineNum;
+            while (tokenValue != "}")
+            {
+                while (currlineNum == lineNum)
+                {
+                    if (tokenValue != "(" && tokenValue != ")" && tokenValue != ";")
+                        statements.insert(make_pair(tokenType, tokenValue));
+                    line.clear();
+                    getline(file, line);
+                    istringstream iss(line);
+                    iss >> tokenType >> tokenValue >> currlineNum;
+                }
+                read_if_else_block(statements, lineNum);
+                statements.clear();
+                lineNum = currlineNum;
+            }
+            cout << "In line " << lineNum + 1 << " >> "
+                 << tokenValue << " closing of else block" << endl;
+        }
+        else if (tokenType == "keyword" && tokenValue == "for" && isMain == true)
+        {   
+            cout << "In line " << lineNum + 1 << " >> "
+         << "Starting of for loop" << endl;
+            line.clear();
+            getline(file, line);
+            istringstream iss(line);
+            iss >> tokenType >> tokenValue >> currlineNum;
+            unordered_map<string, string> statements;
+            unordered_map<string, string> condition;
+            unordered_map<string, string> modification;
+            while (tokenValue != ";")
+            {
+                if (tokenValue != "(")
+                    statements.insert(make_pair(tokenType, tokenValue));
+                line.clear();
+                getline(file, line);
+                istringstream iss(line);
+                iss >> tokenType >> tokenValue >> currlineNum;
+            }
+            read_for(statements, lineNum);
+            statements.clear();
+            getline(file,line);
+            istringstream issNew(line);
+            issNew >> tokenType >> tokenValue >> currlineNum;
+            while (tokenValue != ";")
+            {
+                
+                condition.insert(make_pair(tokenType, tokenValue));
+                line.clear();
+                getline(file, line);
+                istringstream iss(line);
+                iss >> tokenType >> tokenValue >> currlineNum;
+            }
+            read_condition(condition, lineNum);
+            statements.clear();
+            getline(file,line);
+            istringstream issNew2(line);
+            issNew2 >> tokenType >> tokenValue >> currlineNum;
+            while (tokenValue != ")")
+            {
+                
+                modification.insert(make_pair(tokenType, tokenValue));
+                line.clear();
+                getline(file, line);
+                istringstream iss(line);
+                iss >> tokenType >> tokenValue >> currlineNum;
+            }
+            read_for(modification, lineNum);
+            statements.clear();
+            unordered_multimap<string,string>statements2;
+            getline(file,line);
+            istringstream issNew3(line);
+            issNew3 >> tokenType >> tokenValue >> currlineNum;
+            check_open_bracket(currlineNum,tokenValue,"for");
+            getline(file,line);
+            istringstream issNew4(line);
+            issNew4 >> tokenType >> tokenValue >> currlineNum;
+            lineNum=currlineNum;
+            while(lineNum==currlineNum){
+                if (tokenValue != "(" && tokenValue != ")" && tokenValue != ";" && tokenValue!=",")
+                statements2.insert(make_pair(tokenType, tokenValue));
+                line.clear();
+                getline(file, line);
+                istringstream iss(line);
+                iss >> tokenType >> tokenValue >> currlineNum;
+            }
+            read_for_block(statements2,condition,modification,lineNum);
+            lineNum=currlineNum;
+            cout << "In line " << lineNum + 1 << " >> "
+                 << tokenValue << " closing of for block" << endl;
+            
+        }
+        else if (tokenType == "keyword" && tokenValue == "return" && isMain == true)
+        {
+            cout << "In line " << lineNum  << " >> "
+                 << "It returns ";
+            line.clear();
+            getline(file, line);
+            istringstream iss(line);
+            iss >> tokenType >> tokenValue >> currlineNum;
+            cout << tokenValue << " and program ends" << endl;
         }
         else
         {
@@ -95,9 +284,17 @@ void read_main_prototype(string line, string tempTokenValue)
         isMain = true;
     }
 }
-void check_open_bracket(int lineNum, string tokenValue)
-{
-    if (tokenValue == "{")
+void check_open_bracket(int lineNum, string tokenValue,string keyword)
+{   
+    if(keyword=="for")
+    {
+        cout << "In line " << lineNum + 1 << " >> " << tokenValue << " opening curly braces of for block" << endl;
+    }
+    else if(keyword=="if")
+    {
+        cout << "In line " << lineNum + 1 << " >> " << tokenValue << " opening curly braces of if block" << endl;
+    }
+    else if (keyword == "main")
     {
         cout << "In line " << lineNum + 1 << " >> " << tokenValue << " opening curly braces of main function" << endl;
         open = false;
@@ -292,5 +489,52 @@ void read_printf(unordered_multimap<string, string> print, int lineNum)
     {
         cout << "In line " << lineNum + 1 << " >> "
              << "This a print statement and which prints " << output << endl;
+    }
+}
+void read_for(unordered_map<string, string> statements, int lineNum)
+{
+    // for(auto it:statements){
+    //     cout<<it.first<<" "<<it.second<<endl;
+    // }
+    
+    read_var(statements,lineNum);
+    if(statements["operator"]=="++"){
+        cout << "In line " << lineNum + 1 << " >> and "
+                 <<statements["identifier"]<<" is increasing by one"<<endl;
+    }
+
+}
+void read_for_block(unordered_multimap<string, string> statements,unordered_map<string,string>condition,
+                    unordered_map<string,string>modification, int lineNum)
+{
+    // for(auto it:statements){
+    //     cout<<it.first<<" "<<it.second<<endl;
+    // }
+    string keyTodelete = "identifier";
+    string valueTodelete = "printf";
+    int check_print = 0;
+
+    auto range = statements.equal_range(keyTodelete);
+    for (auto it = range.first; it != range.second; ++it)
+    {
+        if (it->second == valueTodelete)
+        {
+            check_print = 1;
+            statements.erase(it);
+            break;
+        }
+    }
+    // cout<<"new"<<endl;
+    // for(auto it:statements){
+    //     cout<<it.first<<" "<<it.second<<endl;
+    // }
+    if (check_print){
+        int limit=stoi(condition["integer"]);
+        for(int i=1;i<=limit;i++)
+        {
+            read_printf(statements, lineNum);
+            traceVar[modification["identifier"]]++;
+        }
+        //read_printf(statements, lineNum);
     }
 }
