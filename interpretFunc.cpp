@@ -236,6 +236,27 @@ void interpretation()
                  << tokenValue << " closing of for block" << endl;
             
         }
+        else if (tokenType == "keyword" && tokenValue == "while" && isMain == true)
+        {   
+            cout << "In line " << lineNum << " >> "
+         << "Starting of while loop" << endl;
+            line.clear();
+            getline(file, line);
+            istringstream iss(line);
+            iss >> tokenType >> tokenValue >> currlineNum;
+            unordered_map<string, string> condition;
+            while (tokenValue != ")")
+            {
+                if (tokenValue != "(")
+                    condition.insert(make_pair(tokenType, tokenValue));
+                line.clear();
+                getline(file, line);
+                istringstream iss(line);
+                iss >> tokenType >> tokenValue >> currlineNum;
+            }
+            read_while(condition,lineNum);
+            
+        }
         else if (tokenType == "keyword" && tokenValue == "return" && isMain == true)
         {
             cout << "In line " << lineNum  << " >> "
@@ -537,4 +558,11 @@ void read_for_block(unordered_multimap<string, string> statements,unordered_map<
         }
         //read_printf(statements, lineNum);
     }
+}
+void read_while(unordered_map<string, string> statements, int lineNum)
+{   
+    // for(auto it:statements){
+    //     cout<<it.first<<" "<<it.second<<endl;
+    // }
+    
 }
