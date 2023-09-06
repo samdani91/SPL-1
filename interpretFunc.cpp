@@ -70,7 +70,7 @@ void interpretation()
         {
             check_open_bracket(lineNum, tokenValue,"main");
         }
-        else if (tokenType == "keyword" && tokenValue != "if" && tokenValue != "else" && tokenValue != "return" && tokenValue != "for" && isMain == true)
+        else if (tokenType == "keyword" && tokenValue != "if" && tokenValue != "else" && tokenValue != "return" && tokenValue != "for" && tokenValue != "while" && isMain == true)
         {
             // vector<pair<string,string>>v;
             unordered_map<string, string> mp;
