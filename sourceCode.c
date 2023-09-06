@@ -9,6 +9,10 @@ int main()
     for(int i=1;i<=10;i++){
         printf("%d\n",i);
     }
+    int j=0;
+    while(j<5){
+        printf("%d",j);
+    }
     if(x!=10){
         printf("%f",x);
         printf("HelloWorld");
