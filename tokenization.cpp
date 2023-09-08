@@ -150,7 +150,7 @@ string readInputCode()
     }
 
     orginal = inputFile;
-    cout << "\n\n\t\t\tYour Input C Code:\n\n";
+    cout << "\n\n\t\t\t-----Your Input C Code-----\n\n";
     cout << orginal << "\n\n";
 
     for (int i = 0; i + 1 < (int)inputFile.size(); ++i)
