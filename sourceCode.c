@@ -8,7 +8,6 @@ int main()
     float x=11;
     float y=15;
 
-    float sum=x+y;
     for(int i=1;i<=10;i++){
         printf("%d\n",i);
     }
