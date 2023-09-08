@@ -6,10 +6,15 @@
 int main()
 {
     float x=11;
+    printf("%f",x);
     float y=15;
+    int z;
+    scanf("%d",&z);
+
+    float sum=x+y;
 
     for(int i=1;i<=10;i++){
-        printf("%d\n",i);
+        printf("%d",i);
     }
     int j=0;
     while(j<5){
@@ -17,7 +22,6 @@ int main()
         j++;
     }
     if(x!=10){
-        printf("%f",x);
         printf("HelloWorld");
     }
     else{
