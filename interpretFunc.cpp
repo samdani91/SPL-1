@@ -634,11 +634,23 @@ void read_for_block(unordered_multimap<string, string> statements,unordered_map<
 
     if (check_print){
         int limit=stoi(condition["integer"]);
-        for(int i=1;i<=limit;i++)
-        {
-            read_printf(statements, lineNum);
-            traceVar[modification["identifier"]]++;
+        int i=(int) traceVar[modification["identifier"]];
+        string controlOperator=condition["operator"];
+        if(controlOperator=="<="){
+            for(;i<=limit;i++)
+            {   
+                read_printf(statements, lineNum);
+                traceVar[modification["identifier"]]++;
+            }
         }
+        else if(controlOperator=="<"){
+            for(;i<limit;i++)
+            {   
+                read_printf(statements, lineNum);
+                traceVar[modification["identifier"]]++;
+            }
+        }
+        
     }
 }
 void read_while(unordered_map<string, string> statements, int lineNum)
