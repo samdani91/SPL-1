@@ -11,8 +11,6 @@ int main()
     int z;
     scanf("%d",&z);
 
-    float sum=x+y;
-
     for(int i=1;i<=3;i++){
         printf("%d",i);
     }
