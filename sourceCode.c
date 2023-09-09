@@ -13,11 +13,11 @@ int main()
 
     float sum=x+y;
 
-    for(int i=1;i<=10;i++){
+    for(int i=1;i<=3;i++){
         printf("%d",i);
     }
     int j=0;
-    while(j<5){
+    while(j<3){
         printf("%d",j);
         j++;
     }
