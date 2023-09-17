@@ -15,6 +15,8 @@ map<string, string> fm_spec = {{"%d", "integer "},
                                {"%f", "float "},
                                {"%fn", "float in every new line "},
                                {"%c", "character "}};
+map<string,string>dataType={{"int","integer"},
+                            {"flaot","floating point"}};
 unordered_map<string, float> traceVar;
 
 bool open, isMain = false;
@@ -374,21 +376,28 @@ void check_open_bracket(int lineNum, string tokenValue,string keyword)
     }
 }
 void read_var(unordered_map<string, string> mp, int lineNum)
-{
+{   
     auto it = mp.find("integer");
-    if (it != mp.end())
-    {
+    auto it2=mp.find("float");
+
+    if(it==mp.end() && it2==mp.end()){
         cout << "In line " << lineNum+1 << " >> "
-             << "This a " << mp["keyword"] << " variable " << mp["identifier"] << " and value assigned to it is " << mp["integer"] << endl;
-        traceVar.insert(make_pair(mp["identifier"], stoi(mp["integer"])));
+             << "This a " << dataType[mp["keyword"]] << " variable " << mp["identifier"]<< endl;
+        traceVar.insert(make_pair(mp["identifier"], 0));
     }
-    else
-    {
+    else{
+        if (it != mp.end())
+        {
+            cout << "In line " << lineNum+1 << " >> "
+                    << "This a " << dataType[mp["keyword"]] << " variable " << mp["identifier"] << " and value assigned to it is " << mp["integer"] << endl;
+            traceVar.insert(make_pair(mp["identifier"], stoi(mp["integer"])));
+        }
+
         it = mp.find("float");
         if (it != mp.end())
         {
             cout << "In line " << lineNum+1 << " >> "
-                 << "This a " << mp["keyword"] << " variable " << mp["identifier"] << " and value assigned to it is " << mp["float"] << endl;
+                    << "This a " << dataType[mp["keyword"]] << " variable " << mp["identifier"] << " and value assigned to it is " << mp["float"] << endl;
             traceVar.insert(make_pair(mp["identifier"], stof(mp["float"])));
         }
     }
