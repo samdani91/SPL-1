@@ -11,6 +11,13 @@ int main()
     int z;
     scanf("%d",&z);
 
+    int n;
+    scanf("%d",&n);
+    int arr[n];
+    for(int i=0;i<n;i++){
+        scanf("%d",&arr[i]);
+    }
+
     for(int i=1;i<=3;i++){
         printf("%d",i);
     }
