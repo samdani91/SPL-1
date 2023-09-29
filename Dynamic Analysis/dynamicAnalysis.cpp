@@ -38,9 +38,21 @@ int main()
         file4<<line<<endl;
     }
     
-
+    int compileResult = system("gcc da.c -o da_exe");
     
-
+    if(compileResult == 0){
+        //cout << "\nCompilation successful. Running da_exe..." << endl;
+        int executionResult = system("./da_exe"); // Execute the compiled program
+        if(executionResult != 0){
+            cout << "\nExecution failed." << endl;
+        }
+        
+    }else{
+        cout << "\nCompilation failed." << endl;
+    }
+    
+    cout<<endl;
+    
     return 0;
 }
 int findLineNum(ifstream& inputFile)
