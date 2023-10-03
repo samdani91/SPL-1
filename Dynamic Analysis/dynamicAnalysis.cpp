@@ -1,16 +1,17 @@
 #include<bits/stdc++.h>
-#include "/home/samdani1412/Desktop/temp/SPL/interpret.h"
-#include "/home/samdani1412/Desktop/temp/SPL/interpretFunc.cpp"
+#include "/home/samdani1412/Desktop/SPL-1/interpret.h"
+#include "/home/samdani1412/Desktop/SPL-1/interpretFunc.cpp"
 using namespace std;
 
 
 int findLineNum(ifstream& inputFile);
 void  moveFilePointer(fstream& inputFile,int readLinenum);
+void compile_execute();
 
 int main()
 {
 
-    ifstream file("/home/samdani1412/Desktop/temp/SPL/sourceCode.c");
+    ifstream file("/home/samdani1412/Desktop/SPL-1/sourceCode.c");
 
     if(!(file.is_open())){
         cout<<"Error in opening Source Code file"<<endl;
@@ -26,7 +27,7 @@ int main()
     int readLineNum=findLineNum(file);
     file.close();
 
-    fstream file3("/home/samdani1412/Desktop/temp/SPL/sourceCode.c");
+    fstream file3("/home/samdani1412/Desktop/SPL-1/sourceCode.c");
     moveFilePointer(file3,readLineNum);
 
     fstream file4("da.c");
@@ -34,10 +35,22 @@ int main()
 
     string line;
 
-    while(getline(file3,line)){
-        file4<<line<<endl;
+    while (getline(file3, line)) {
+        if(line=="}") continue;
+        file4 << line << endl<<"}";
+        file4.seekp(-1, ios_base::end);
+
+        compile_execute();
+        cout<<"..."<<endl;
     }
     
+    
+    cout<<endl;
+    
+    return 0;
+}
+void compile_execute()
+{
     int compileResult = system("gcc da.c -o da_exe");
     
     if(compileResult == 0){
@@ -50,10 +63,6 @@ int main()
     }else{
         cout << "\nCompilation failed." << endl;
     }
-    
-    cout<<endl;
-    
-    return 0;
 }
 int findLineNum(ifstream& inputFile)
 {
