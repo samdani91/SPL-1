@@ -7,7 +7,7 @@ using namespace std;
 int findLineNum(ifstream& inputFile);
 void  moveFilePointer(fstream& inputFile,int readLinenum);
 void compile_execute();
-void writeLoopBlock(fstream& file3,fstream& file4);
+void writeBlock(fstream& file3,fstream& file4);
 
 int main()
 {
@@ -40,9 +40,9 @@ int main()
         getline(file3,line);
         if(file3.eof()) continue;
     
-        if(line.find("for(")!=string::npos){;
+        if(line.find("for(")!=string::npos or line.find("while(")!=string::npos or line.find("if(")!=string::npos or line.find("else")!=string::npos){;
             file4<<line<<endl;
-            writeLoopBlock(file3,file4);
+            writeBlock(file3,file4);
             continue;
         }
         
@@ -128,7 +128,7 @@ void  moveFilePointer(fstream& inputFile,int readLinenum)
     }
 }
 
-void writeLoopBlock(fstream& file3,fstream& file4)
+void writeBlock(fstream& file3,fstream& file4)
 {   
     string line;
     getline(file3,line);
