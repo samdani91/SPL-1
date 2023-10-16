@@ -43,6 +43,7 @@ int main()
         if(line.find("for(")!=string::npos){;
             file4<<line<<endl;
             writeLoopBlock(file3,file4);
+            continue;
         }
         
         file4<<line<<endl<<"}";
