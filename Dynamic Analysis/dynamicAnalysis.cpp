@@ -36,22 +36,18 @@ int main()
 
     string line;
 
-    while (getline(file3, line)) {
-        if(line=="}" and file3.eof()) continue;
-
-        if(line.find("for(")!=string::npos or line.find("while(")!=string::npos){
-            file4 << line << endl;
+    while(!file3.eof()){
+        getline(file3,line);
+        if(file3.eof()) continue;
+    
+        if(line.find("for(")!=string::npos){;
+            file4<<line<<endl;
             writeLoopBlock(file3,file4);
-            compile_execute();
-            continue;
         }
-
-        file4 << line << endl<<"}";
         
+        file4<<line<<endl<<"}";
         file4.seekp(-1, ios_base::end);
-
-        compile_execute();
-        cout<<"..."<<endl;
+        
     }
     
     
@@ -59,6 +55,7 @@ int main()
     
     return 0;
 }
+
 void compile_execute()
 {
     int compileResult = system("gcc da.c -o da_exe");
@@ -74,6 +71,7 @@ void compile_execute()
         cout << "\nCompilation failed." << endl;
     }
 }
+
 int findLineNum(ifstream& inputFile)
 {
     
@@ -116,24 +114,26 @@ int findLineNum(ifstream& inputFile)
     }
     return targetLineNum;
 }
+
 void  moveFilePointer(fstream& inputFile,int readLinenum)
 {
     string line;
     int currLineNum=1;
     while(getline(inputFile,line)){
-        //cout<<line<<endl;
         if(currLineNum==readLinenum-1){
             break;
         }
         currLineNum++;
     }
-    //return inputFile;
 }
+
 void writeLoopBlock(fstream& file3,fstream& file4)
 {   
     string line;
-    while(line!="}"){
-        getline(file3,line);
+    getline(file3,line);
+    while((line.find("}")==string::npos)){   
         file4<<line<<endl;
+        getline(file3,line);
     }
+    file4<<line<<endl;
 }
