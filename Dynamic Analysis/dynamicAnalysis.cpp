@@ -19,7 +19,7 @@ int main()
         return 0;
     }
 
-    ifstream file2("da.c");
+    ifstream file2("testCode.c");
 
     int writeLineNum=findLineNum(file2);
 
@@ -31,7 +31,7 @@ int main()
     fstream file3("/home/samdani1412/Desktop/SPL-1/sourceCode.c");
     moveFilePointer(file3,readLineNum);
 
-    fstream file4("da.c");
+    fstream file4("testCode.c");
     moveFilePointer(file4,writeLineNum);
 
     string line;
