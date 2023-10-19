@@ -18,6 +18,6 @@ void read_for_block(unordered_multimap<string, string> statements,unordered_map<
 void read_while(unordered_map<string, string> statements, int lineNum);
 void read_while_block(unordered_multimap<string, string> statements,unordered_map<string,string>condition,int lineNum);
 bool isArray(unordered_multimap<string, string> map);
-void readArray(unordered_map<string, string> statements, int lineNum);
+void readArray(unordered_multimap<string, string> statements, int lineNum);
 
 #endif
