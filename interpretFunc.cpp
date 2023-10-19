@@ -100,16 +100,24 @@ void interpretation()
         else if (tokenType == "keyword" && tokenValue != "if" && tokenValue != "else" && tokenValue != "return" && tokenValue != "for" && tokenValue != "while" && isMain == true)
         {
             unordered_map<string, string> mp;
+            unordered_multimap<string,string>map;
             while (currlineNum == lineNum)
             {
                 mp.insert(make_pair(tokenType, tokenValue));
+                map.insert(make_pair(tokenType, tokenValue));
                 line.clear();
                 getline(file, line);
                 istringstream iss(line);
                 iss >> tokenType >> tokenValue >> currlineNum;
             }
-            read_var(mp, lineNum);
+            if(isArray(map)){
+                readArray(map,lineNum);
+            }
+            else{
+                read_var(mp, lineNum);
+            }
             mp.clear();
+            map.clear();
         }
         else if (tokenType == "keyword" && tokenValue == "if" && isMain == true)
         {
@@ -734,4 +742,24 @@ void read_while_block(unordered_multimap<string, string> statements,unordered_ma
             }
         }
     }
+}
+
+bool isArray(unordered_multimap<string, string> map)
+{   
+    string toFind="operator";
+    auto range=map.equal_range(toFind);
+    for (auto it = range.first; it != range.second; ++it)
+    {
+        if (it->second == "[" or it->second == "]")
+        {
+            return true;
+        }
+    }
+
+    return false;  
+
+}
+void readArray(unordered_multimap<string, string> statements, int lineNum)
+{
+
 }
