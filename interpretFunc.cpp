@@ -761,5 +761,19 @@ bool isArray(unordered_multimap<string, string> map)
 }
 void readArray(unordered_multimap<string, string> statements, int lineNum)
 {
+    string key="keyword";
+    auto range=statements.equal_range(key);
 
+    string data_type=range.first->second;
+
+    range=statements.equal_range("identifier");
+
+    vector<string>v;
+    for (auto it = range.first; it != range.second; ++it) {
+        v.push_back(it->second);
+    }
+
+    cout << "In line " << lineNum+1 << " >> "
+             << "This a " << dataType[data_type] << " array variable " << v[1]<< " and size is "<<v[0]<<endl;
+             
 }
