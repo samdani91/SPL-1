@@ -16,7 +16,8 @@ map<string, string> fm_spec = {{"%d", "integer "},
                                {"%fn", "float in every new line "},
                                {"%c", "character "}};
 map<string,string>dataType={{"int","integer"},
-                            {"flaot","floating point"}};
+                            {"float","floating point"},
+                            {"char","string"}};
 unordered_map<string, float> traceVar;
 
 bool open, isMain = false;
@@ -433,11 +434,30 @@ void read_condition(unordered_map<string, string> condition, int lineNum)
     float temp2;
     if (checkInt)
     {
-        temp2 = stof(condition["integer"]);
+        // temp2 = stof(condition["integer"]);
+        try
+        {
+            temp2 = stof(condition["integer"]);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        
     }
     else
-    {
-        temp2 = stof(condition["float"]);
+    {   
+        // cout<<condition["float"]<<endl;
+        // temp2 = stof(condition["float"]);
+        try
+        {
+            temp2 = stof(condition["float"]);
+        }
+        catch(const exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        
     }
     if (condition["operator"] == "!=")
     {
@@ -767,13 +787,21 @@ void readArray(unordered_multimap<string, string> statements, int lineNum)
     string data_type=range.first->second;
 
     range=statements.equal_range("identifier");
+    auto range2=statements.equal_range("integer");
 
     vector<string>v;
     for (auto it = range.first; it != range.second; ++it) {
         v.push_back(it->second);
     }
+    string size;
+    if(v.size()==1){
+        v[1]=v[0];
+        size=range2.first->second;
+    }else{
+        size=v[0];
+    }
 
     cout << "In line " << lineNum+1 << " >> "
-             << "This a " << dataType[data_type] << " array variable " << v[1]<< " and size is "<<v[0]<<endl;
+             << "This a " << dataType[data_type] << " array variable " << v[1]<< " and size is "<<size<<endl;
              
 }
