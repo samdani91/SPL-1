@@ -608,6 +608,7 @@ void read_scanf(unordered_multimap<string, string> input, int lineNum)
     string var;
     string output;
     int check_format_spec = 0;
+    bool isArr;
     for (auto it = range.first; it != range.second; ++it)
     {   
         if (it->first == "string")
@@ -626,19 +627,47 @@ void read_scanf(unordered_multimap<string, string> input, int lineNum)
             }
         }
     }
-    range = input.equal_range("identifier");
+
+    range=input.equal_range("operator");
     for (auto it = range.first; it != range.second; ++it)
     {
-        if (it->first == "identifier")
+        if (it->first == "operator")
+        {
+            if(it->second=="[" or it->second=="]"){
+                isArr=true;
+                break;
+            }
+        }
+    }
+    
+    range = input.equal_range("identifier");
+    for (auto it = range.first; it != range.second; ++it)
+    {   
+        if (it->first == "identifier" and !isArr)
         {
             var = it->second;
             break;
         }
+        if(isArr){
+            string temp=it->second;
+            if(temp.size()==1 and temp[0]>=96 and temp[0]<=127) continue;
+            else{
+                var=it->second;
+                break;
+            }
+        }
     }
-    if (check_format_spec)
+
+
+    if (check_format_spec and !isArr)
     {
         cout << "In line " << lineNum + 1 << " >> "
              << "This a scanf statement and takes input a " << fm_spec[format_specifier] << "and assigned to variable "<< var <<  endl;
+    }
+    else if (check_format_spec and isArr)
+    {
+        cout << "In line " << lineNum + 1 << " >> "
+             << "Taking input of "<< var << " element"<< endl;
     }
     
 }
@@ -655,22 +684,29 @@ void read_for_block(unordered_multimap<string, string> statements,unordered_map<
                     unordered_map<string,string>modification, int lineNum)
 {
     string keyTodelete = "identifier";
-    string valueTodelete = "printf";
     int check_print = 0;
+    int check_scan = 0;
 
     auto range = statements.equal_range(keyTodelete);
     for (auto it = range.first; it != range.second; ++it)
     {
-        if (it->second == valueTodelete)
+        if (it->second == "printf" or it->second == "scanf")
         {
-            check_print = 1;
+            if(it->second == "printf") check_print = 1;
+            if(it->second == "scanf") check_scan = 1;
+
             statements.erase(it);
             break;
         }
     }
 
+    for(auto it:statements){
+        cout<<it.first<<" "<<it.second<<endl;
+    }
+
     if (check_print){
         int limit=stoi(condition["integer"]);
+        // cout<<limit<<endl;
         int i=(int) traceVar[modification["identifier"]];
         string controlOperator=condition["operator"];
         if(controlOperator=="<="){
@@ -689,6 +725,9 @@ void read_for_block(unordered_multimap<string, string> statements,unordered_map<
         }
         
     }
+    if(check_scan){
+        read_scanf(statements,lineNum);
+    }
 }
 void read_while(unordered_map<string, string> statements, int lineNum)
 {   
@@ -701,7 +740,7 @@ void read_while_block(unordered_multimap<string, string> statements,unordered_ma
     static unordered_multimap<string, string> tempStatements;
     string op="";
     bool checkModification=false;
-    static int check_print = 0,lineNo;
+    static int check_print = 0,check_scan=0,lineNo;
     for(auto it:statements){
         for(auto it2:operatorSign){
             if(it.second==it2){
@@ -723,21 +762,25 @@ void read_while_block(unordered_multimap<string, string> statements,unordered_ma
         string valueTodelete = "printf";
         lineNo=lineNum;
         auto range = statements.equal_range(keyTodelete);
-        for (auto it = range.first; it != range.second; ++it)
-        {
-            if (it->second == valueTodelete)
-            {
-                check_print = 1;
+        for (auto it = range.first; it != range.second; ++it){
+            if (it->second == "printf" or it->second == "scanf"){
+                if(it->second == "printf") check_print = 1;
+                if(it->second == "scanf") check_scan = 1;
+
                 statements.erase(it);
                 break;
             }
         }
+        
         for(auto it:statements){
             tempStatements.insert(make_pair(it.first,it.second));
         }
     }
 
     if(checkModification==true){
+        if(check_scan){
+            read_scanf(tempStatements,lineNum);
+        }
         int limit=stoi(condition["integer"]);
         int i=(int) traceVar[modification["identifier"]];
         string controlOperator=condition["operator"];
@@ -745,9 +788,8 @@ void read_while_block(unordered_multimap<string, string> statements,unordered_ma
             for(;i<=limit;i++)
             {   
                 if (check_print){
-
-                read_printf(tempStatements, lineNo);
-                traceVar[modification["identifier"]]++;
+                    read_printf(tempStatements, lineNo);
+                    traceVar[modification["identifier"]]++;
                 }
             }
         }
@@ -755,9 +797,8 @@ void read_while_block(unordered_multimap<string, string> statements,unordered_ma
             for(;i<limit;i++)
             {   
                 if (check_print){
-
-                read_printf(tempStatements, lineNo);
-                traceVar[modification["identifier"]]++;
+                    read_printf(tempStatements, lineNo);
+                    traceVar[modification["identifier"]]++;
                 }
             }
         }
