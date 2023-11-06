@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "interpret.h"
+#include "errorChecking.cpp"
 using namespace std;
 
 vector<string> header = {"stdio.h", "conio.h", "stdlib.h", "math.h", "string.h"};
@@ -82,7 +83,7 @@ void interpretation()
             while (currlineNum == lineNum)
             {   
                 
-                if (tokenValue != "(" && tokenValue != ")" && tokenValue != ";")
+                if (tokenValue != "(" && tokenValue != ")")
                 {
                     input.insert(make_pair(tokenType, tokenValue));
                 }
@@ -96,6 +97,7 @@ void interpretation()
             }else{
                 read_scanf(input,lineNum);
             }
+            check_semi_colon(input,lineNum);
 
         }
         else if (tokenType == "keyword" && tokenValue != "if" && tokenValue != "else" && tokenValue != "return" && tokenValue != "for" && tokenValue != "while" && isMain == true)
@@ -117,6 +119,7 @@ void interpretation()
             else{
                 read_var(mp, lineNum);
             }
+            check_semi_colon(map,lineNum);
             mp.clear();
             map.clear();
         }
@@ -154,7 +157,7 @@ void interpretation()
             {
                 while (currlineNum == lineNum)
                 {
-                    if (tokenValue != "(" && tokenValue != ")" && tokenValue != ";")
+                    if (tokenValue != "(" && tokenValue != ")")
                         statements.insert(make_pair(tokenType, tokenValue));
                     line.clear();
                     getline(file, line);
@@ -162,6 +165,7 @@ void interpretation()
                     iss >> tokenType >> tokenValue >> currlineNum;
                 }
                 read_if_else_block(statements, lineNum);
+                check_semi_colon(statements,lineNum);
                 statements.clear();
                 lineNum = currlineNum;
             }
@@ -179,11 +183,12 @@ void interpretation()
             getline(file, line);
             istringstream iss(line);
             iss >> tokenType >> tokenValue >> currlineNum;
+            lineNum++;
             while (tokenValue != "}")
             {
                 while (currlineNum == lineNum)
                 {
-                    if (tokenValue != "(" && tokenValue != ")" && tokenValue != ";")
+                    if (tokenValue != "(" && tokenValue != ")")
                         statements.insert(make_pair(tokenType, tokenValue));
                     line.clear();
                     getline(file, line);
@@ -191,6 +196,7 @@ void interpretation()
                     iss >> tokenType >> tokenValue >> currlineNum;
                 }
                 read_if_else_block(statements, lineNum);
+                check_semi_colon(statements,lineNum);
                 statements.clear();
                 lineNum = currlineNum;
             }
@@ -257,7 +263,7 @@ void interpretation()
             issNew4 >> tokenType >> tokenValue >> currlineNum;
             lineNum=currlineNum;
             while(lineNum==currlineNum){
-                if (tokenValue != "(" && tokenValue != ")" && tokenValue != ";" && tokenValue!=",")
+                if (tokenValue != "(" && tokenValue != ")"  && tokenValue!=",")
                 statements2.insert(make_pair(tokenType, tokenValue));
                 line.clear();
                 getline(file, line);
@@ -265,6 +271,7 @@ void interpretation()
                 iss >> tokenType >> tokenValue >> currlineNum;
             }
             read_for_block(statements2,condition,modification,lineNum);
+            check_semi_colon(statements2,lineNum);
             lineNum=currlineNum;
             cout << "In line " << lineNum+1 << " >> "
                  << tokenValue << " closing of for loop block" << endl;
@@ -301,7 +308,7 @@ void interpretation()
             while(tokenValue!="}"){
                 lineNum=currlineNum;
                 while(lineNum==currlineNum){
-                    if (tokenValue != "(" && tokenValue != ")" && tokenValue != ";" && tokenValue!=",")
+                    if (tokenValue != "(" && tokenValue != ")" && tokenValue!=",")
                     statements.insert(make_pair(tokenType, tokenValue));
                     line.clear();
                     getline(file, line);
@@ -309,6 +316,7 @@ void interpretation()
                     iss >> tokenType >> tokenValue >> currlineNum;
                 }
                 read_while_block(statements,condition,lineNum);
+                check_semi_colon(statements,lineNum);
                 statements.clear();
 
             }
@@ -326,6 +334,13 @@ void interpretation()
             istringstream iss(line);
             iss >> tokenType >> tokenValue >> currlineNum;
             cout << tokenValue << " and program ends" << endl;
+
+            unordered_multimap<string, string> statements;
+            getline(file, line);
+            istringstream iss2(line);
+            iss2 >> tokenType >> tokenValue >> currlineNum;
+            statements.insert(make_pair(tokenType,tokenValue));
+            check_semi_colon(statements,currlineNum);
         }
         else
         {
@@ -390,7 +405,7 @@ void read_var(unordered_map<string, string> mp, int lineNum)
     auto it2=mp.find("float");
     auto it3=mp.find("operator");
 
-    if(it==mp.end() && it2==mp.end() && it3->second != "*"){
+    if((it==mp.end() && it2==mp.end() && (it3!=mp.end() && it3->second != "*")) || it3==mp.end()){
         cout << "In line " << lineNum+1 << " >> "
              << "This a " << dataType[mp["keyword"]] << " variable " << mp["identifier"]<< endl;
         traceVar.insert(make_pair(mp["identifier"], 0));
@@ -703,10 +718,6 @@ void read_for_block(unordered_multimap<string, string> statements,unordered_map<
             statements.erase(it);
             break;
         }
-    }
-
-    for(auto it:statements){
-        cout<<it.first<<" "<<it.second<<endl;
     }
 
     if (check_print){
