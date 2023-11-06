@@ -388,11 +388,16 @@ void read_var(unordered_map<string, string> mp, int lineNum)
 {   
     auto it = mp.find("integer");
     auto it2=mp.find("float");
+    auto it3=mp.find("operator");
 
-    if(it==mp.end() && it2==mp.end()){
+    if(it==mp.end() && it2==mp.end() && it3->second != "*"){
         cout << "In line " << lineNum+1 << " >> "
              << "This a " << dataType[mp["keyword"]] << " variable " << mp["identifier"]<< endl;
         traceVar.insert(make_pair(mp["identifier"], 0));
+    }
+    else if(it3!=mp.end() and it3->second == "*"){
+        cout << "In line " << lineNum+1 << " >> "
+             << "This a " << dataType[mp["keyword"]] << " pointer variable " << mp["identifier"]<< endl;
     }
     else{
         if (it != mp.end())
