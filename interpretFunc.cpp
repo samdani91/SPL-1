@@ -722,7 +722,6 @@ void read_for_block(unordered_multimap<string, string> statements,unordered_map<
 
     if (check_print){
         int limit=stoi(condition["integer"]);
-        // cout<<limit<<endl;
         int i=(int) traceVar[modification["identifier"]];
         string controlOperator=condition["operator"];
         if(controlOperator=="<="){
@@ -795,7 +794,7 @@ void read_while_block(unordered_multimap<string, string> statements,unordered_ma
 
     if(checkModification==true){
         if(check_scan){
-            read_scanf(tempStatements,lineNum);
+            read_scanf(tempStatements,lineNo-1);
         }
         int limit=stoi(condition["integer"]);
         int i=(int) traceVar[modification["identifier"]];
@@ -817,6 +816,15 @@ void read_while_block(unordered_multimap<string, string> statements,unordered_ma
                     traceVar[modification["identifier"]]++;
                 }
             }
+        }
+
+        if(op=="++"){
+            cout << "In line " << lineNum+1 << " >> "
+                 <<condition["identifier"]<<" is increasing by one"<<endl;
+        }
+        else if(op=="--"){
+            cout << "In line " << lineNum+1 << " >> "
+                 <<condition["identifier"]<<" is decreasing by one"<<endl;
         }
     }
 }
