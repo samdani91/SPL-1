@@ -96,6 +96,7 @@ void interpretation()
                 read_printf(input,lineNum);
             }else{
                 read_scanf(input,lineNum);
+                check_Ampersand(input,lineNum);
             }
             check_semi_colon(input,lineNum);
 
@@ -549,15 +550,17 @@ void read_condition(unordered_map<string, string> condition, int lineNum)
 void read_if_else_block(unordered_multimap<string, string> statements, int lineNum)
 {
     string keyTodelete = "identifier";
-    string valueTodelete = "printf";
     int check_print = 0;
+    int check_scan = 0;
 
     auto range = statements.equal_range(keyTodelete);
     for (auto it = range.first; it != range.second; ++it)
     {
-        if (it->second == valueTodelete)
+        if (it->second == "printf" or it->second == "scanf")
         {
-            check_print = 1;
+            if(it->second == "printf") check_print = 1;
+            if(it->second == "scanf") check_scan = 1;
+
             statements.erase(it);
             break;
         }
@@ -565,6 +568,11 @@ void read_if_else_block(unordered_multimap<string, string> statements, int lineN
 
     if (check_print)
         read_printf(statements, lineNum);
+    if(check_scan){
+        read_scanf(statements,lineNum);
+        check_Ampersand(statements,lineNum);
+    }
+
 }
 void read_printf(unordered_multimap<string, string> print, int lineNum)
 {
@@ -742,6 +750,7 @@ void read_for_block(unordered_multimap<string, string> statements,unordered_map<
     }
     if(check_scan){
         read_scanf(statements,lineNum);
+        check_Ampersand(statements,lineNum);
     }
 }
 void read_while(unordered_map<string, string> statements, int lineNum)
@@ -795,6 +804,7 @@ void read_while_block(unordered_multimap<string, string> statements,unordered_ma
     if(checkModification==true){
         if(check_scan){
             read_scanf(tempStatements,lineNo-1);
+            check_Ampersand(tempStatements,lineNum);
         }
         int limit=stoi(condition["integer"]);
         int i=(int) traceVar[modification["identifier"]];
