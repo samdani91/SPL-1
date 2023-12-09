@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include "interpret.h"
 #include "errorChecking.cpp"
+#include "stringLibraryFunctions.cpp"
 using namespace std;
 
 vector<string> header = {"stdio.h", "conio.h", "stdlib.h", "math.h", "string.h"};
@@ -100,6 +101,26 @@ void interpretation()
             }
             check_semi_colon(input,lineNum);
 
+        }
+        else if(tokenType=="identifier")
+        {
+            string checkVar=tokenValue;
+            string tempLine;
+            auto it=traceVar.find(checkVar);
+            if(it==traceVar.end()){
+                unordered_multimap<string,string>statements;
+                while (currlineNum == lineNum)
+                {   
+                    tempLine+=tokenValue;
+                    statements.insert(make_pair(tokenType, tokenValue));               
+                    line.clear();
+                    getline(file, line);
+                    istringstream iss(line);
+                    iss >> tokenType >> tokenValue >> currlineNum;
+                }
+                check_semi_colon(statements,lineNum);
+                readStringFunction(tempLine,lineNum);
+            }
         }
         else if (tokenType == "keyword" && tokenValue != "if" && tokenValue != "else" && tokenValue != "return" && tokenValue != "for" && tokenValue != "while" && isMain == true)
         {

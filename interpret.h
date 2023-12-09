@@ -19,7 +19,10 @@ void read_while(unordered_map<string, string> statements, int lineNum);
 void read_while_block(unordered_multimap<string, string> statements,unordered_map<string,string>condition,int lineNum);
 bool isArray(unordered_multimap<string, string> map);
 void readArray(unordered_multimap<string, string> statements, int lineNum);
+
 void check_semi_colon(unordered_multimap<string, string> statement, int lineNum);
 void check_Ampersand(unordered_multimap<string,string>statment,int lineNum);
+
+void readStringFunction(string line, int lineNum);
 
 #endif
