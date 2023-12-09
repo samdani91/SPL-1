@@ -1,6 +1,9 @@
 {
     "files.associations": {
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "stdlib.h": "c",
+        "iostream": "cpp",
+        "iosfwd": "cpp"
     },
     "cmake.configureOnOpen": false,
     "java.project.explorer.showNonJavaResources": false

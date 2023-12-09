@@ -864,16 +864,16 @@ void readArray(unordered_multimap<string, string> statements, int lineNum)
     range=statements.equal_range("identifier");
     auto range2=statements.equal_range("integer");
 
-    vector<string>v;
+    vector<string>v(1,"");
     for (auto it = range.first; it != range.second; ++it) {
         v.push_back(it->second);
     }
     string size;
-    if(v.size()==1){
-        v[1]=v[0];
+    if(v.size()==2){
         size=range2.first->second;
     }else{
-        size=v[0];
+        size=v[1];
+        v[1]=v[2];
     }
 
     cout << "In line " << lineNum+1 << " >> "
