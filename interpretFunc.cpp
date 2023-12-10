@@ -2,6 +2,7 @@
 #include "interpret.h"
 #include "errorChecking.cpp"
 #include "stringLibraryFunctions.cpp"
+#include "arithmeticExpression.cpp"
 using namespace std;
 
 vector<string> header = {"stdio.h", "conio.h", "stdlib.h", "math.h", "string.h"};
