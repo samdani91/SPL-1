@@ -25,4 +25,13 @@ void check_Ampersand(unordered_multimap<string,string>statment,int lineNum);
 
 void readStringFunction(string line, int lineNum);
 
+void readArithmetic(string line,int lineNum);
+void readAddition(string storeVar,string op1,string op2,int lineNum);
+void readSubtraction(string storeVar,string op1,string op2,int lineNum);
+void readMultiplication(string storeVar,string op1,string op2,int lineNum);
+void readDivision(string storeVar,string op1,string op2,int lineNum);
+void readRemainder(string storeVar,string op1,string op2,int lineNum);
+
+
+
 #endif

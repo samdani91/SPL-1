@@ -102,7 +102,7 @@ void interpretation()
             check_semi_colon(input,lineNum);
 
         }
-        else if(tokenType=="identifier")
+        else if(tokenType=="identifier" and (find(allFunc.begin(),allFunc.end(),tokenValue))!=allFunc.end())
         {
             string checkVar=tokenValue;
             string tempLine;
@@ -121,6 +121,25 @@ void interpretation()
                 check_semi_colon(statements,lineNum);
                 readStringFunction(tempLine,lineNum);
             }
+            
+        }
+        else if(tokenType=="identifier")
+        {
+            unordered_multimap<string,string>statements;
+            string tempLine;
+            while (currlineNum == lineNum)
+            {   
+                tempLine+=tokenValue;
+                statements.insert(make_pair(tokenType, tokenValue));               
+                line.clear();
+                getline(file, line);
+                istringstream iss(line);
+                iss >> tokenType >> tokenValue >> currlineNum;
+            }
+
+            check_semi_colon(statements,lineNum);
+            readArithmetic(tempLine,lineNum);
+            
         }
         else if (tokenType == "keyword" && tokenValue != "if" && tokenValue != "else" && tokenValue != "return" && tokenValue != "for" && tokenValue != "while" && isMain == true)
         {
