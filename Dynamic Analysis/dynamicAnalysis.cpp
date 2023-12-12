@@ -12,14 +12,14 @@ void writeBlock(fstream& file3,fstream& file4);
 int main()
 {
 
-    ifstream file("/home/samdani1412/Desktop/SPL-1/sourceCode.c");
+    ifstream file("/home/samdani1412/Desktop/SPL-1/Dynamic Analysis/sourceCodeDA.c");
 
     if(!(file.is_open())){
         cout<<"Error in opening Source Code file"<<endl;
         return 0;
     }
 
-    ifstream file2("testCode.c");
+    ifstream file2("/home/samdani1412/Desktop/SPL-1/Dynamic Analysis/testCode.c");
 
     int writeLineNum=findLineNum(file2);
 
@@ -28,27 +28,33 @@ int main()
     int readLineNum=findLineNum(file);
     file.close();
 
-    fstream file3("/home/samdani1412/Desktop/SPL-1/sourceCode.c");
+    fstream file3("/home/samdani1412/Desktop/SPL-1/Dynamic Analysis/sourceCodeDA.c");
     moveFilePointer(file3,readLineNum);
 
-    fstream file4("testCode.c");
-    moveFilePointer(file4,writeLineNum);
 
     string line;
 
+    vector<string> testFile;
+    ifstream f2("/home/samdani1412/Desktop/SPL-1/Dynamic Analysis/testCode.c");
+    string line2;
+
+    while(!f2.eof()){
+        getline(f2,line2);
+        testFile.push_back(line2);
+    }
+
+    f2.close();
+
     while(!file3.eof()){
         getline(file3,line);
-        if(file3.eof()) continue;
-    
-        if(line.find("for(")!=string::npos or line.find("while(")!=string::npos or line.find("if(")!=string::npos or line.find("else")!=string::npos){;
-            file4<<line<<endl;
-            writeBlock(file3,file4);
-            continue;
+        if(line.find("return 0;")!=string::npos) break;
+        testFile.insert(testFile.end()-3,line);
+        for(auto it:testFile) cout<<it<<endl;
+        ofstream w("/home/samdani1412/Desktop/SPL-1/Dynamic Analysis/testCode.c");
+        for(auto it:testFile){
+            w<<it<<endl;
         }
-        
-        file4<<line<<endl<<"}";
-        file4.seekp(-1, ios_base::end);
-        
+        compile_execute();     
     }
     
     
@@ -59,7 +65,7 @@ int main()
 
 void compile_execute()
 {
-    int compileResult = system("gcc da.c -o da_exe");
+    int compileResult = system("gcc testCode.c -o da_exe");
     
     if(compileResult == 0){
         //cout << "\nCompilation successful. Running da_exe..." << endl;
