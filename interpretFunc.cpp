@@ -622,6 +622,7 @@ void read_printf(unordered_multimap<string, string> print, int lineNum)
     string var;
     string output;
     int check_format_spec = 0;
+    bool isArr=false;
     for (auto it = range.first; it != range.second; ++it)
     {   
         if (it->first == "string")
@@ -650,19 +651,46 @@ void read_printf(unordered_multimap<string, string> print, int lineNum)
             }
         }
     }
+    
+    range=print.equal_range("operator");
+    for (auto it = range.first; it != range.second; ++it)
+    {
+        if (it->first == "operator")
+        {
+            if(it->second=="[" or it->second=="]"){
+                isArr=true;
+                break;
+            }
+        }
+    }
+
     range = print.equal_range("identifier");
     for (auto it = range.first; it != range.second; ++it)
     {
-        if (it->first == "identifier")
+        if (it->first == "identifier" and !isArr)
         {
             var = it->second;
             break;
         }
+        if(isArr){
+            string temp=it->second;
+            if(temp.size()==1 and temp[0]>=96 and temp[0]<=127) continue;
+            else{
+                var=it->second;
+                break;
+            }
+        }
     }
-    if (check_format_spec)
+
+    if (check_format_spec and !isArr)
     {
         cout << "In line " << lineNum+1 << " >> "
              << "This a print statement and which prints a " << fm_spec[format_specifier] << var << " = " << traceVar[var] << endl;
+    }
+    else if (check_format_spec and isArr)
+    {
+        cout << "In line " << lineNum + 1 << " >> "
+             << "Prints "<< var << " element"<< endl;
     }
     else
     {
@@ -677,7 +705,7 @@ void read_scanf(unordered_multimap<string, string> input, int lineNum)
     string var;
     string output;
     int check_format_spec = 0;
-    bool isArr;
+    bool isArr=false;
     for (auto it = range.first; it != range.second; ++it)
     {   
         if (it->first == "string")
@@ -769,7 +797,24 @@ void read_for_block(unordered_multimap<string, string> statements,unordered_map<
         }
     }
 
+    bool isArr=false;
+
     if (check_print){
+        range=statements.equal_range("operator");
+        for (auto it = range.first; it != range.second; ++it)
+        {
+            if (it->first == "operator")
+            {
+                if(it->second=="[" or it->second=="]"){
+                    isArr=true;
+                    break;
+                }
+            }
+        }
+        if(isArr){
+            read_printf(statements,lineNum);
+            return;
+        }
         int limit=stoi(condition["integer"]);
         int i=(int) traceVar[modification["identifier"]];
         string controlOperator=condition["operator"];
@@ -842,10 +887,10 @@ void read_while_block(unordered_multimap<string, string> statements,unordered_ma
         }
     }
 
-    if(checkModification==true){
+    if(checkModification==true){  
         if(check_scan){
             read_scanf(tempStatements,lineNo-1);
-            check_Ampersand(tempStatements,lineNum);
+            check_Ampersand(tempStatements,lineNum);     
         }
         int limit=stoi(condition["integer"]);
         int i=(int) traceVar[modification["identifier"]];
