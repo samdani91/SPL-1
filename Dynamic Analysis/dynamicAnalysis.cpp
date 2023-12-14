@@ -38,20 +38,35 @@ int main()
     ifstream f2("/home/samdani1412/Desktop/SPL-1/Dynamic Analysis/testCode.c");
     string line2;
 
-    while(!f2.eof()){
+    while(!f2.eof())
+    {
         getline(f2,line2);
         testFile.push_back(line2);
     }
 
     f2.close();
 
-    while(!file3.eof()){
+    while(!file3.eof())
+    {
         getline(file3,line);
         if(line.find("return 0;")!=string::npos) break;
-        testFile.insert(testFile.end()-3,line);
+        if(line.find("for(")!=string::npos or line.find("while(")!=string::npos or line.find("if(")!=string::npos or line.find("else")!=string::npos)
+        {   
+            testFile.insert(testFile.end()-3,line);
+            while(line.find("}")==string::npos)
+            {
+                getline(file3,line);
+                testFile.insert(testFile.end()-3,line);
+            }
+        }
+        else
+        {
+            testFile.insert(testFile.end()-3,line);
+        }
         for(auto it:testFile) cout<<it<<endl;
         ofstream w("/home/samdani1412/Desktop/SPL-1/Dynamic Analysis/testCode.c");
-        for(auto it:testFile){
+        for(auto it:testFile)
+        {
             w<<it<<endl;
         }
         compile_execute();     
@@ -68,8 +83,7 @@ void compile_execute()
     int compileResult = system("gcc testCode.c -o da_exe");
     
     if(compileResult == 0){
-        //cout << "\nCompilation successful. Running da_exe..." << endl;
-        int executionResult = system("./da_exe"); // Execute the compiled program
+        int executionResult = system("./da_exe");
         if(executionResult != 0){
             cout << "\nExecution failed." << endl;
         }
