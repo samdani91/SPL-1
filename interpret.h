@@ -8,6 +8,7 @@ void interpretation();
 void read_headers(string line);
 void read_main_prototype(string line, string tokenValue);
 void check_open_bracket(int lineNum, string tokenValue,string keyword);
+void read_inLineVar(set<string>vars,int lineNum);
 void read_var(unordered_map<string, string> map, int currlineNum);
 void read_condition(unordered_map<string, string> condition, int lineNum);
 void read_if_else_block(unordered_multimap<string, string> statements, int lineNum);
