@@ -522,28 +522,25 @@ void read_condition(unordered_map<string, string> condition, int lineNum)
     float temp2;
     if (checkInt)
     {
-        // temp2 = stof(condition["integer"]);
         try
         {
-            temp2 = stof(condition["integer"]);
+            temp2 = stoi(condition["integer"]);
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << '\n';
+            // std::cerr << e.what() << '\n';
         }
         
     }
     else
     {   
-        // cout<<condition["float"]<<endl;
-        // temp2 = stof(condition["float"]);
         try
         {
             temp2 = stof(condition["float"]);
         }
         catch(const exception& e)
         {
-            std::cerr << e.what() << '\n';
+            // std::cerr << e.what() << '\n';
         }
         
     }
