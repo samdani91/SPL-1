@@ -4,7 +4,8 @@
 #include<math.h>
 
 int main()
-{
+{   
+    int p,q,r;
     float x=11;
     printf("%f",x);
     float y=15;
@@ -17,6 +18,12 @@ int main()
     int *ptr;
     float *ptr2;
 
+    char str[10];
+    char str2[10];
+
+    strcpy(str2,str);
+    strcat(str,str2);
+
     int arr[n];
     for(int i=0;i<n;i++){
         scanf("%d",&arr[i]);
@@ -27,7 +34,6 @@ int main()
     }
     int j=0;
     while(j<3){
-        scanf("%d",&arr[j]);
         printf("%d",j);
         j++;
     }

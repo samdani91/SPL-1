@@ -145,9 +145,16 @@ void interpretation()
         else if (tokenType == "keyword" && tokenValue != "if" && tokenValue != "else" && tokenValue != "return" && tokenValue != "for" && tokenValue != "while" && isMain == true)
         {
             unordered_map<string, string> mp;
+            set<string>inlineVars;
             unordered_multimap<string,string>map;
+            bool lineVars=false;
             while (currlineNum == lineNum)
-            {
+            {   
+                if(tokenValue==",") lineVars=true;
+                if(tokenValue!="," and tokenValue!=";")
+                {   
+                    inlineVars.insert(tokenValue);
+                }
                 mp.insert(make_pair(tokenType, tokenValue));
                 map.insert(make_pair(tokenType, tokenValue));
                 line.clear();
@@ -158,12 +165,16 @@ void interpretation()
             if(isArray(map)){
                 readArray(map,lineNum);
             }
+            else if(lineVars){
+                read_inLineVar(inlineVars,lineNum);
+            }
             else{
                 read_var(mp, lineNum);
             }
             check_semi_colon(map,lineNum);
             mp.clear();
             map.clear();
+            inlineVars.clear();
         }
         else if (tokenType == "keyword" && tokenValue == "if" && isMain == true)
         {
@@ -440,6 +451,21 @@ void check_open_bracket(int lineNum, string tokenValue,string keyword)
         cout << "In line " << lineNum+1 << " >> " << tokenValue << " opening curly braces of main function" << endl;
         open = false;
     }
+}
+void read_inLineVar(set<string>vars,int lineNum)
+{
+    int count=vars.size()-1;
+    string type=*(vars.begin());
+    cout << "In line " << lineNum+1 << " >> "
+             << "There are " << count << " " << dataType[type] <<" variables ";
+    auto it = next(vars.begin());
+    for (; it != vars.end(); ++it) {
+        cout << *it << " ";
+        traceVar.insert(make_pair(*it, 0));
+    }
+    cout << endl;
+          
+    
 }
 void read_var(unordered_map<string, string> mp, int lineNum)
 {   
